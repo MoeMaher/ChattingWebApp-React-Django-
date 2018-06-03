@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import SignupComponent from '../SignUp/signup.component';
 import ChatComponent from '../Chat/chat.component';
 import SigninComponent from '../SignIn/signin.component';
+import SearchComponent from "../Search/search.component";
 
 export default class LayoutComponent extends Component {
 
@@ -10,43 +11,71 @@ export default class LayoutComponent extends Component {
 
         this.state = {
             loggedIn: false,
+            loggedInUser: {
+                username: null,
+            },
+            verificationToken: null,
             viewSignup: false,
-            viewChat: true,
+            viewChat: false,
             viewSignin: false,
-            viewChats: false
+            viewChats: false,
+            viewSearch: true
         }
 
+    }
+
+    viewSearch = () =>{
+        this.setState({
+            viewSignup: false,
+            viewChat: false,
+            viewSignin: false,
+            viewSearch: true
+        })
+    }
+
+    logIn = (token, username)=>{
+        let loggedInUser = {
+            username,
+        }
+        this.setState({loggedIn: true, loggedInUser});
+        this.setState({verificationToken: token});
+    }
+
+    printState = ()=> {
+        console.log(this.state);
     }
 
     viewSignup = () => {
         this.setState({
             viewSignup: true,
             viewChat: false,
-            viewSignin: false
+            viewSignin: false,
+            viewSearch: false
         })
     }
 
     viewChat = () => {
+        console.log('view the chat')
         this.setState({
             viewSignup: false,
             viewChat: true,
-            viewSignin: false
+            viewSignin: false,
+            viewSearch: false
         })
     }
 
     viewChats = () => {
-        if(this.state.viewChat) {
-            this.setState({
-                viewChats: !this.state.viewChats
-            })
-        }
+        this.setState({
+            viewChats: !this.state.viewChats
+        })
     }
 
     viewSignin = () => {
         this.setState({
             viewSignup: false,
             viewChat: false,
-            viewSignin: true
+            viewSignin: true,
+            viewSearch: false
         })
     }
 
@@ -59,10 +88,13 @@ export default class LayoutComponent extends Component {
             body = (<ChatComponent viewChats={this.state.viewChats} />);
         }
         if(this.state.viewSignup) {
-            body = (<SignupComponent />);
+            body = (<SignupComponent  />);
         }
         if(this.state.viewSignin) {
-            body = (<SigninComponent />);
+            body = (<SigninComponent login={this.logIn} viewChat={this.viewChat} />);
+        }
+        if(this.state.viewSearch) {
+            body = (<SearchComponent viewChat={this.viewChat} />);
         }
 
 
@@ -76,21 +108,32 @@ export default class LayoutComponent extends Component {
 
                     <div className="collapse navbar-collapse" id="navbarColor02">
                         <ul className="navbar-nav mr-auto">
-                            {(this.state.viewChat)?<li className="nav-item active">
-                                <a className="nav-link" onClick={this.viewChats} href="#">
-                                    Chats {(this.state.viewChats)?<span className="sr-only">(current)</span>:null}
+                            {(this.state.loggedIn && !this.state.viewChat)?<li className="nav-item active">
+                                <a className="nav-link" onClick={this.viewChat} href="#">
+                                    Chat {(this.state.viewChat)?<span className="sr-only">(current)</span>:null}
                                 </a>
                             </li>:null}
-
-                            {/*<li className="nav-item">*/}
-                                {/*<a onClick={this.viewChat} className="nav-link" href="#">Chat</a>*/}
-                            {/*</li>*/}
+                            {(this.state.loggedIn && this.state.viewChat)?<li className="nav-item active">
+                                <a className="nav-link" onClick={this.viewChats} href="#">
+                                    Current Chats {(this.state.viewChats)?<span className="sr-only">(current)</span>:null}
+                                </a>
+                            </li>:null}
+                            {(this.state.loggedIn)?<li className="nav-item active">
+                                <a className="nav-link" onClick={this.viewSearch} href="#">
+                                    Search to Chat {(this.state.viewSearch)?<span className="sr-only">(current)</span>:null}
+                                </a>
+                            </li>:null}
+                           <li className="nav-item active">
+                                <a className="nav-link" onClick={this.printState} href="#">
+                                    printState
+                                </a>
+                            </li>
                         </ul>
                         {(this.state.viewSignin)?<form className="form-inline my-2 my-lg-0">
                             <button onClick={this.viewSignup} className="btn btn-secondary my-2 my-sm-0" type="submit">SignUp</button>
                         </form>
                             :null}
-                        {(this.state.viewChat)?<form className="form-inline my-2 my-lg-0">
+                        {(this.state.viewChat || this.state.viewSearch)?<form className="form-inline my-2 my-lg-0">
                                 <button onClick={this.viewSignin} className="btn btn-secondary my-2 my-sm-0" type="submit">SignOut</button>
                             </form>
                             :null}
@@ -102,7 +145,6 @@ export default class LayoutComponent extends Component {
 
                     </div>
                 </nav>
-
                 {body}
             </main>
         );
