@@ -41,7 +41,7 @@ export default class ChatComponent extends Component {
                     <h1 className="display-3">Mohamed Maher</h1>
                     <p className="lead">This is a simple hero unit, a simple jumbotron-style component for calling.</p>
                     <br />
-                    <table class="table ">
+                    <table className="table ">
                         <thead>
                         <tr>
                         </tr>
@@ -61,12 +61,12 @@ export default class ChatComponent extends Component {
                     </table>
 
                 </div>
-                <p className="enterMessage lead jumbotron" >
+                <span className="enterMessage lead jumbotron" >
                     <div className="form-group">
                         <input type="text" className="form-control main-input" placeholder="Default input" id="inputDefault" />
                         {/*<a className="btn btn-primary btn-lg" style={{float:'right'}} href="#" role="button">Send</a>*/}
                     </div>
-                </p>
+                </span>
             </div>
 
         );

@@ -4,7 +4,7 @@ import ChatComponent from '../Chat/chat.component';
 import SigninComponent from '../SignIn/signin.component';
 import SearchComponent from "../Search/search.component";
 
-export default class LayoutComponent extends Component {
+export class LayoutComponent extends Component {
 
     constructor(props) {
         super(props);
@@ -85,7 +85,7 @@ export default class LayoutComponent extends Component {
         let body = null;
 
         if(this.state.viewChat) {
-            body = (<ChatComponent viewChats={this.state.viewChats} />);
+            body = (<ChatComponent token={this.state.verificationToken} viewChats={this.state.viewChats} />);
         }
         if(this.state.viewSignup) {
             body = (<SignupComponent  />);
@@ -94,7 +94,7 @@ export default class LayoutComponent extends Component {
             body = (<SigninComponent login={this.logIn} viewChat={this.viewChat} />);
         }
         if(this.state.viewSearch) {
-            body = (<SearchComponent viewChat={this.viewChat} />);
+            body = (<SearchComponent token={this.state.verificationToken} viewChat={this.viewChat} />);
         }
 
 
